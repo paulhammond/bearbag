@@ -22,24 +22,33 @@ let notes = Table("ZSFNOTE")
 let count = try db.scalar(notes.count)
 print("db has \(count) notes")
 
+let uuid = Expression<String>("ZUNIQUEIDENTIFIER")
 let title = Expression<String>("ZTITLE")
 let text = Expression<String>("ZTEXT")
 let creation = Expression<Date>("ZCREATIONDATE")
-for note in try db.prepare(notes.select(title, text).order(creation.desc)) {
+for note in try db.prepare(notes.select(uuid, title, text).order(creation.desc)) {
 
-  let clean = note[title]
-    .trimmingCharacters(in: .whitespaces)
-    .replacingOccurrences(of: "\\W", with: "-", options: .regularExpression)
-    .replacingOccurrences(of: "-+", with: "-", options: .regularExpression)
-    .lowercased()
-    .prefix(100)
+  let fileURL = outputDir.appendingPathComponent("\(cleanTitle(note[title])).md")
+  print("title: \(fileURL)")
 
-  let fileURL = outputDir.appendingPathComponent("\(clean).md")
-  print("title: \(note[title]) \(fileURL)")
+  let md = processContent(uuid: note[uuid], contents: note[text])
 
-  try note[text].write(
+  try md.write(
     to: fileURL,
     atomically: true,
     encoding: .utf8
   )
+}
+
+func cleanTitle(_ str: String) -> String {
+  let clean = str.trimmingCharacters(in: .whitespaces)
+    .replacingOccurrences(of: "\\W", with: "-", options: .regularExpression)
+    .replacingOccurrences(of: "-+", with: "-", options: .regularExpression)
+    .lowercased()
+
+  return String(clean.prefix(100))
+}
+
+func processContent(uuid: String, contents: String) -> String {
+  return "\(contents)\n\nBearID: \(uuid)\n"
 }
