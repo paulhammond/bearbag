@@ -3,7 +3,8 @@ import SQLite
 
 let home = NSHomeDirectory()
 let db = try Connection(
-  "\(home)/Library/Group Containers/9K33E3U3T4.net.shinyfrog.bear/Application Data/database.sqlite")
+  "\(home)/Library/Group Containers/9K33E3U3T4.net.shinyfrog.bear/Application Data/database.sqlite",
+  readonly: true)
 
 let notes = Table("ZSFNOTE")
 
