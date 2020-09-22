@@ -4,16 +4,20 @@
 import PackageDescription
 
 let package = Package(
-    name: "bearbag",
-    dependencies: [
-        .package(url: "https://github.com/stephencelis/SQLite.swift.git", from: "0.12.0"),
-    ],
-    targets: [
-        .target(
-            name: "bearbag",
-            dependencies: [.product(name: "SQLite", package: "SQLite.swift") ]),
-        .testTarget(
-            name: "bearbagTests",
-            dependencies: ["bearbag"]),
-    ]
+  name: "bearbag",
+  dependencies: [
+    .package(url: "https://github.com/stephencelis/SQLite.swift.git", from: "0.12.0"),
+    .package(url: "https://github.com/apple/swift-argument-parser", .upToNextMinor(from: "0.3.0")),
+  ],
+  targets: [
+    .target(
+      name: "bearbag",
+      dependencies: [
+        .product(name: "SQLite", package: "SQLite.swift"),
+        .product(name: "ArgumentParser", package: "swift-argument-parser"),
+      ]),
+    .testTarget(
+      name: "bearbagTests",
+      dependencies: ["bearbag"]),
+  ]
 )
