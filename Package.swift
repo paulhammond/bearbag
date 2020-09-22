@@ -15,9 +15,6 @@ let package = Package(
       dependencies: [
         .product(name: "SQLite", package: "SQLite.swift"),
         .product(name: "ArgumentParser", package: "swift-argument-parser"),
-      ]),
-    .testTarget(
-      name: "bearbagTests",
-      dependencies: ["bearbag"]),
+      ])
   ]
 )
