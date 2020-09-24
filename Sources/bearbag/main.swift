@@ -63,6 +63,9 @@ struct BearBag: ParsableCommand {
 
   func getDir(_ str: String) -> String? {
     let tags = extractTags(str)
+    if tags.count == 0 {
+      return nil
+    }
     return tags[0].components(separatedBy: "/").first
   }
 
