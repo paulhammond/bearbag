@@ -8,7 +8,7 @@ final class bearbagTests: XCTestCase {
     let tests: [(title: String, text: String, expected: String)] = [
       ("note", "", "note.md"),
       ("title spaces", "and #tag #a #b", "tag/title-spaces.md"),
-      ("subdir", "#tag/subtag #a #b", "tag/subdir.md"),
+      ("subdir", "#tag/subtag #a #b", "tag/subtag/subdir.md"),
     ]
     for test in tests {
       let note = Note(
@@ -65,7 +65,7 @@ final class bearbagTests: XCTestCase {
   func testDir() {
     let tests: [(text: String, expected: String?)] = [
       ("#a #b", "a"),
-      ("#a/b hello", "a"),
+      ("#a/b hello", "a/b"),
       ("hello", nil),
     ]
     for test in tests {

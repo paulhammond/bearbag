@@ -30,7 +30,7 @@ public struct Note {
     if tags.count == 0 {
       return nil
     }
-    return tags[0].components(separatedBy: "/").first
+    return tags[0]
   }
 
   var tags: [String] {
