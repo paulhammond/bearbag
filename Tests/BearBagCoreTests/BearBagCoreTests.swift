@@ -31,6 +31,9 @@ final class bearbagTests: XCTestCase {
       ("#a/b #b", ["a/b", "b"]),
       ("hello #b", ["b"]),
       ("hello", []),
+      ("hello#a #b\n#c", ["b", "c"]),  // tags have to be preceded by whitespace
+      ("#1 #12 #a1 #1a", ["a1"]),  // numbers are not tags
+      ("#/ #/a #a/a", ["a/a"]),  // #/ is not a tag
     ]
     for test in tests {
       let note = Note(

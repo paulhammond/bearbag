@@ -27,12 +27,12 @@ public struct Note {
   }
 
   var tags: [String] {
-    let regex = try! NSRegularExpression(pattern: "#[\\w\\/]+")
+    let regex = try! NSRegularExpression(pattern: "\\s#[\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}][\\w\\/]*")
 
     let nsStr = text as NSString
     return regex.matches(in: text, options: [], range: NSRange(location: 0, length: nsStr.length))
       .map {
-        String(nsStr.substring(with: $0.range).dropFirst())
+        String(nsStr.substring(with: $0.range).dropFirst(2))
       }.unique()
   }
 
