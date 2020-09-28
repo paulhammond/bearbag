@@ -32,8 +32,13 @@ struct BearBag: ParsableCommand {
     let title = Expression<String>("ZTITLE")
     let text = Expression<String>("ZTEXT")
     let creation = Expression<Date>("ZCREATIONDATE")
+    let trashed = Expression<Int>("ZTRASHED")
+    let deleted = Expression<Int>("ZPERMANENTLYDELETED")
 
-    for row in try db.prepare(noteTable.select(uuid, title, text).order(creation.desc)) {
+    for row in try db.prepare(
+      noteTable.select(uuid, title, text, deleted, trashed).where(deleted == 0 && trashed == 0)
+        .order(creation.desc))
+    {
       let note = Note(
         uuid: row[uuid],
         title: row[title],
