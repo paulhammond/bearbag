@@ -20,5 +20,8 @@ let package = Package(
     .target(
       name: "BearBagCore"
     ),
+    .testTarget(
+      name: "BearBagCoreTests",
+      dependencies: ["BearBagCore"]),
   ]
 )
