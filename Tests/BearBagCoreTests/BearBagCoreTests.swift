@@ -4,6 +4,23 @@ import XCTest
 
 final class bearbagTests: XCTestCase {
 
+  func testPath() {
+    let tests: [(title: String, text: String, expected: String)] = [
+      ("note", "", "note.md"),
+      ("title spaces", "and #tag #a #b", "tag/title-spaces.md"),
+      ("subdir", "#tag/subtag #a #b", "tag/subdir.md"),
+    ]
+    for test in tests {
+      let note = Note(
+        uuid: "zzzz",
+        title: test.title,
+        text: "# \(test.title)\n\(test.text)"
+      )
+      XCTAssertEqual(note.path, test.expected)
+    }
+
+  }
+
   func testCleanTitle() {
     let tests: [(title: String, expected: String)] = [
       ("note", "note"),

@@ -11,7 +11,14 @@ public struct Note {
     self.text = text
   }
 
-  public var cleanTitle: String {
+  public var path: String {
+    if dir != nil {
+      return "\(dir!)/\(cleanTitle).md"
+    }
+    return "\(cleanTitle).md"
+  }
+
+  var cleanTitle: String {
     let clean = title.trimmingCharacters(in: .whitespaces)
       .replacingOccurrences(of: "\\W", with: "-", options: .regularExpression)
       .replacingOccurrences(of: "-+", with: "-", options: .regularExpression)
@@ -19,7 +26,7 @@ public struct Note {
     return String(clean.prefix(100))
   }
 
-  public var dir: String? {
+  var dir: String? {
     if tags.count == 0 {
       return nil
     }

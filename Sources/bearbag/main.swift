@@ -45,13 +45,7 @@ struct BearBag: ParsableCommand {
         text: row[text]
       )
 
-      var path = note.cleanTitle
-      let dir = note.dir
-      if dir != nil {
-        path = "\(dir!)/\(path)"
-      }
-
-      let fileURL = outputURL.appendingPathComponent("\(path).md")
+      let fileURL = outputURL.appendingPathComponent(note.path)
 
       try mkdir(fileURL.deletingLastPathComponent())
       print("writing: \(fileURL.path)")
