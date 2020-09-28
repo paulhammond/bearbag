@@ -1,4 +1,5 @@
 import ArgumentParser
+import BearBagCore
 import Foundation
 import SQLite
 
@@ -22,61 +23,39 @@ struct BearBag: ParsableCommand {
 
     let outputURL = URL(fileURLWithPath: output)
 
-    let notes = Table("ZSFNOTE")
+    let noteTable = Table("ZSFNOTE")
 
-    let count = try db.scalar(notes.count)
+    let count = try db.scalar(noteTable.count)
     print("db has \(count) notes")
 
     let uuid = Expression<String>("ZUNIQUEIDENTIFIER")
     let title = Expression<String>("ZTITLE")
     let text = Expression<String>("ZTEXT")
     let creation = Expression<Date>("ZCREATIONDATE")
-    for note in try db.prepare(notes.select(uuid, title, text).order(creation.desc)) {
 
-      var path = cleanTitle(note[title])
-      let dir = getDir(note[text])
+    for row in try db.prepare(noteTable.select(uuid, title, text).order(creation.desc)) {
+      let note = Note(
+        uuid: row[uuid],
+        title: row[title],
+        text: row[text]
+      )
+
+      var path = note.cleanTitle
+      let dir = note.dir
       if dir != nil {
         path = "\(dir!)/\(path)"
       }
 
       let fileURL = outputURL.appendingPathComponent("\(path).md")
 
-      let md = processContent(uuid: note[uuid], contents: note[text])
       try mkdir(fileURL.deletingLastPathComponent())
       print("writing: \(fileURL.path)")
-      try md.write(
+      try note.markdown.write(
         to: fileURL,
         atomically: true,
         encoding: .utf8
       )
     }
-  }
-
-  func cleanTitle(_ str: String) -> String {
-    let clean = str.trimmingCharacters(in: .whitespaces)
-      .replacingOccurrences(of: "\\W", with: "-", options: .regularExpression)
-      .replacingOccurrences(of: "-+", with: "-", options: .regularExpression)
-      .lowercased()
-
-    return String(clean.prefix(100))
-  }
-
-  func getDir(_ str: String) -> String? {
-    let tags = extractTags(str)
-    if tags.count == 0 {
-      return nil
-    }
-    return tags[0].components(separatedBy: "/").first
-  }
-
-  func extractTags(_ str: String) -> [String] {
-    let regex = try! NSRegularExpression(pattern: "#[\\w\\/]+")
-
-    let nsStr = str as NSString
-    return regex.matches(in: str, options: [], range: NSRange(location: 0, length: nsStr.length))
-      .map {
-        String(nsStr.substring(with: $0.range).dropFirst())
-      }.unique()
   }
 
   func mkdir(_ dir: URL) throws {
@@ -87,9 +66,6 @@ struct BearBag: ParsableCommand {
     }
   }
 
-  func processContent(uuid: String, contents: String) -> String {
-    return "\(contents)\n\nBearID: \(uuid)\n"
-  }
 }
 
 BearBag.main()

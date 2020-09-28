@@ -13,8 +13,12 @@ let package = Package(
     .target(
       name: "bearbag",
       dependencies: [
+        "BearBagCore",
         .product(name: "SQLite", package: "SQLite.swift"),
         .product(name: "ArgumentParser", package: "swift-argument-parser"),
-      ])
+      ]),
+    .target(
+      name: "BearBagCore"
+    ),
   ]
 )
