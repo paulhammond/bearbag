@@ -12,10 +12,14 @@ public struct Note {
   }
 
   public var path: String {
+    return "\(basename).md"
+  }
+
+  var basename: String {
     if dir != nil {
-      return "\(dir!)/\(cleanTitle).md"
+      return "\(dir!)/\(cleanTitle)"
     }
-    return "\(cleanTitle).md"
+    return cleanTitle
   }
 
   var cleanTitle: String {
@@ -33,6 +37,26 @@ public struct Note {
     return tags[0]
   }
 
+  public var images: [String: String] {
+    let regex = try! NSRegularExpression(pattern: "\\[image:(.+?)\\]")
+    let nsStr = text as NSString
+
+    let matches = regex.matches(
+      in: text, options: [], range: NSRange(location: 0, length: nsStr.length))
+    var dict = [String: String]()
+    for m in matches {
+      let orig = String(nsStr.substring(with: m.range(at: 1)))
+      let parts = orig.split(separator: "/", maxSplits: 2)
+      if parts.count == 2 {
+        dict[orig] = "\(basename)/\(parts[1])"
+      } else {
+        // this shouldn't happen but this feels like a good fallback
+        dict[orig] = "\(basename)/\(orig)"
+      }
+    }
+    return dict
+  }
+
   var tags: [String] {
     let regex = try! NSRegularExpression(pattern: "\\s#[\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}][\\w\\/]*")
 
@@ -44,7 +68,11 @@ public struct Note {
   }
 
   public var markdown: String {
-    return "\(text)\n\nBearID: \(uuid)\n"
+    var md = text
+    for (orig, clean) in images {
+      md = md.replacingOccurrences(of: "[image:\(orig)]", with: "![](\(clean))")
+    }
+    return "\(md)\n\nBearID: \(uuid)\n"
   }
 
 }

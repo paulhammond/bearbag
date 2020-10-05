@@ -22,6 +22,9 @@ struct BearBag: ParsableCommand {
       readonly: true)
 
     let outputURL = URL(fileURLWithPath: output)
+    let imgURL = URL(fileURLWithPath: dbPath)
+      .deletingLastPathComponent()
+      .appendingPathComponent("/Local Files/Note Images")
 
     let noteTable = Table("ZSFNOTE")
 
@@ -48,6 +51,17 @@ struct BearBag: ParsableCommand {
       let fileURL = outputURL.appendingPathComponent(note.path)
 
       try mkdir(fileURL.deletingLastPathComponent())
+
+      for (src, dst) in note.images {
+
+        let dstURL = outputURL.appendingPathComponent(dst)
+        let srcURL = imgURL.appendingPathComponent(src)
+
+        print("writing: \(dstURL.path)")
+        try mkdir(dstURL.deletingLastPathComponent())
+        try FileManager.default.copyItem(at: srcURL, to: dstURL)
+      }
+
       print("writing: \(fileURL.path)")
       try note.markdown.write(
         to: fileURL,

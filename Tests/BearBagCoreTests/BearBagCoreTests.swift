@@ -78,6 +78,31 @@ final class bearbagTests: XCTestCase {
     }
   }
 
+  func testImages() {
+    let tests: [(text: String, expected: [String: String])] = [
+      ("foo", [:]),
+      (
+        "foo [image:7EA751E0-D1DB-4128-A02F-F773FEC0DBF8-85992-000165FFFD3D2095/389EE865-B870-46CC-AF3D-38708AE4CCDB.png]",
+        [
+          "7EA751E0-D1DB-4128-A02F-F773FEC0DBF8-85992-000165FFFD3D2095/389EE865-B870-46CC-AF3D-38708AE4CCDB.png":
+            "hello/389EE865-B870-46CC-AF3D-38708AE4CCDB.png"
+        ]
+      ),
+      (
+        "foo [image:foo.png]",
+        ["foo.png": "hello/foo.png"]
+      ),
+    ]
+    for test in tests {
+      let note = Note(
+        uuid: "7EA751E0-D1DB-4128-A02F-F773FEC0DBF8-85992-000165FFFD3D2095",
+        title: "hello",
+        text: "# hello \(test.text)\n"
+      )
+      XCTAssertEqual(note.images, test.expected)
+    }
+  }
+
   func testMarkdown() {
     let note = Note(
       uuid: "zzzz",
