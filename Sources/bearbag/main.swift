@@ -59,6 +59,9 @@ struct BearBag: ParsableCommand {
 
         print("writing: \(dstURL.path)")
         try mkdir(dstURL.deletingLastPathComponent())
+        if FileManager.default.fileExists(atPath: dstURL.path) {
+          try FileManager.default.removeItem(at: dstURL)
+        }
         try FileManager.default.copyItem(at: srcURL, to: dstURL)
       }
 
