@@ -30,6 +30,8 @@ final class bearbagTests: XCTestCase {
       ("note with spaces", "note-with-spaces"),
       ("a!b?c*d e_f•g", "a-b-c-d-e_f-g"),
       ("a    !!   b", "a-b"),
+      (" a b ", "a-b"),
+      ("!a b!", "a-b"),
       (String(repeating: "ab", count: 52), String(repeating: "ab", count: 50)),
     ]
     for test in tests {

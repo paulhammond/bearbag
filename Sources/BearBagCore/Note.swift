@@ -26,6 +26,7 @@ public struct Note {
     let clean = title.trimmingCharacters(in: .whitespaces)
       .replacingOccurrences(of: "\\W", with: "-", options: .regularExpression)
       .replacingOccurrences(of: "-+", with: "-", options: .regularExpression)
+      .trimmingCharacters(in: CharacterSet(charactersIn: "-"))
       .lowercased()
     return String(clean.prefix(100))
   }
