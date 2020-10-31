@@ -3,7 +3,7 @@ import BearBagCore
 import Foundation
 import SQLite
 
-struct BearBag: ParsableCommand {
+struct Bearbag: ParsableCommand {
   static var configuration = CommandConfiguration(
     abstract: "A bear export utility"
   )
@@ -83,4 +83,4 @@ struct BearBag: ParsableCommand {
 
 }
 
-BearBag.main()
+Bearbag.main()
