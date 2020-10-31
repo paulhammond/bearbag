@@ -5,8 +5,7 @@ import SQLite
 
 struct BearBag: ParsableCommand {
   static var configuration = CommandConfiguration(
-    abstract: "A bear export utility",
-    version: "0.1"
+    abstract: "A bear export utility"
   )
 
   @Option(name: .customLong("db"), help: .hidden)
