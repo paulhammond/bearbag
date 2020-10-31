@@ -73,6 +73,8 @@ public struct Note {
     for (orig, clean) in images {
       md = md.replacingOccurrences(of: "[image:\(orig)]", with: "![](\(clean))")
     }
+    md = md.replacingOccurrences(of: "[\\t\\f\\p{Z}]+\\n", with: "\n", options: .regularExpression)
+    md = md.replacingOccurrences(of: "[\\t\\f\\p{Z}]+$", with: "", options: .regularExpression)
     return "\(md)\n\nBearID: \(uuid)\n"
   }
 

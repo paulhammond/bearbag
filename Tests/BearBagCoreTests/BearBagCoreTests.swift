@@ -109,9 +109,9 @@ final class bearbagTests: XCTestCase {
     let note = Note(
       uuid: "zzzz",
       title: "title",
-      text: "# title text"
+      text: "# title text\ntext   \ntab\t\n   "
     )
-    XCTAssertEqual(note.markdown, "# title text\n\nBearID: zzzz\n")
+    XCTAssertEqual(note.markdown, "# title text\ntext\ntab\n\n\nBearID: zzzz\n")
   }
 
 }
