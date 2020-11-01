@@ -41,6 +41,12 @@ struct Bearbag: ParsableCommand {
       noteTable.select(uuid, title, text, deleted, trashed).where(deleted == 0 && trashed == 0)
         .order(creation.desc))
     {
+
+      // skip empty notes
+      if (row[title] == "" && row[text] == "# ") {
+        continue
+      }
+
       let note = Note(
         uuid: row[uuid],
         title: row[title],
