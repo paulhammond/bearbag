@@ -30,11 +30,12 @@ public struct File: Equatable {
   }
 
   public var markdown: String {
+    let relativeFolder = (directory as NSString).lastPathComponent
     switch type {
     case .image:
-      return "![](\(destination))"
+      return "![](\(relativeFolder)/\(filename))"
     case .file:
-      return "[\(filename)](\(destination))"
+      return "[\(filename)](\(relativeFolder)/\(filename))"
     }
   }
 
