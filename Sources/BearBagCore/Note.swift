@@ -38,24 +38,20 @@ public struct Note {
     return tags[0]
   }
 
-  public var images: [String: String] {
-    let regex = try! NSRegularExpression(pattern: "\\[image:(.+?)\\]")
+  public var files: [File] {
+    let regex = try! NSRegularExpression(pattern: "\\[(file|image):(.+?)\\]")
     let nsStr = text as NSString
 
     let matches = regex.matches(
       in: text, options: [], range: NSRange(location: 0, length: nsStr.length))
-    var dict = [String: String]()
+    var files = [File]()
+
     for m in matches {
-      let orig = String(nsStr.substring(with: m.range(at: 1)))
-      let parts = orig.split(separator: "/", maxSplits: 2)
-      if parts.count == 2 {
-        dict[orig] = "\(basename)/\(parts[1])"
-      } else {
-        // this shouldn't happen but this feels like a good fallback
-        dict[orig] = "\(basename)/\(orig)"
-      }
+      let fileType = String(nsStr.substring(with: m.range(at: 1)))
+      let path = String(nsStr.substring(with: m.range(at: 2)))
+      files += [File(type: fileType, path: path, directory: basename)]
     }
-    return dict
+    return files
   }
 
   var tags: [String] {
@@ -70,8 +66,8 @@ public struct Note {
 
   public var markdown: String {
     var md = text
-    for (orig, clean) in images {
-      md = md.replacingOccurrences(of: "[image:\(orig)]", with: "![](\(clean))")
+    for file in files {
+      md = md.replacingOccurrences(of: file.bearMarkup, with: file.markdown)
     }
     md = md.replacingOccurrences(of: "[\\t\\f\\p{Z}]+\\n", with: "\n", options: .regularExpression)
     md = md.replacingOccurrences(of: "[\\t\\f\\p{Z}]+$", with: "", options: .regularExpression)

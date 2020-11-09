@@ -2,7 +2,7 @@ import XCTest
 
 @testable import BearBagCore
 
-final class bearbagTests: XCTestCase {
+final class noteTests: XCTestCase {
 
   func testPath() {
     let tests: [(title: String, text: String, expected: String)] = [
@@ -80,19 +80,38 @@ final class bearbagTests: XCTestCase {
     }
   }
 
-  func testImages() {
-    let tests: [(text: String, expected: [String: String])] = [
-      ("foo", [:]),
+  func testFiles() {
+    let tests: [(text: String, expected: [File])] = [
+      ("foo", []),
       (
-        "foo [image:7EA751E0-D1DB-4128-A02F-F773FEC0DBF8-85992-000165FFFD3D2095/389EE865-B870-46CC-AF3D-38708AE4CCDB.png]",
+        """
+        foo
+        [image:7EA751E0-D1DB-4128-A02F-F773FEC0DBF8-85992-000165FFFD3D2095/389EE865-B870-46CC-AF3D-38708AE4CCDB.png]
+        [file:C7F1AD00-860E-4BEE-9CED-F1F90E09C09B-28765-0002B5A12E6DC5CF/myfile.pdf]
+        """,
         [
-          "7EA751E0-D1DB-4128-A02F-F773FEC0DBF8-85992-000165FFFD3D2095/389EE865-B870-46CC-AF3D-38708AE4CCDB.png":
-            "hello/389EE865-B870-46CC-AF3D-38708AE4CCDB.png"
+          File(
+            type: "image",
+            path:
+              "7EA751E0-D1DB-4128-A02F-F773FEC0DBF8-85992-000165FFFD3D2095/389EE865-B870-46CC-AF3D-38708AE4CCDB.png",
+            directory: "hello"
+          ),
+          File(
+            type: "file",
+            path: "C7F1AD00-860E-4BEE-9CED-F1F90E09C09B-28765-0002B5A12E6DC5CF/myfile.pdf",
+            directory: "hello"
+          ),
         ]
       ),
       (
         "foo [image:foo.png]",
-        ["foo.png": "hello/foo.png"]
+        [
+          File(
+            type: "image",
+            path: "foo.png",
+            directory: "hello"
+          )
+        ]
       ),
     ]
     for test in tests {
@@ -101,7 +120,7 @@ final class bearbagTests: XCTestCase {
         title: "hello",
         text: "# hello \(test.text)\n"
       )
-      XCTAssertEqual(note.images, test.expected)
+      XCTAssertEqual(note.files, test.expected)
     }
   }
 
@@ -109,9 +128,11 @@ final class bearbagTests: XCTestCase {
     let note = Note(
       uuid: "zzzz",
       title: "title",
-      text: "# title text\ntext   \ntab\t\n   "
+      text: "# title text\ntext   \ntab\t\n[image:7EA751E0/foo.png]\n[file:C7F1AD00/bar.pdf]\n"
     )
-    XCTAssertEqual(note.markdown, "# title text\ntext\ntab\n\n\nBearID: zzzz\n")
+    XCTAssertEqual(
+      note.markdown,
+      "# title text\ntext\ntab\n![](title/foo.png)\n[bar.pdf](title/bar.pdf)\n\n\nBearID: zzzz\n")
   }
 
 }
