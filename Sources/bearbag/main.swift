@@ -43,7 +43,7 @@ struct Bearbag: ParsableCommand {
     {
 
       // skip empty notes
-      if (row[title] == "" && row[text] == "# ") {
+      if row[title] == "" && row[text] == "# " {
         continue
       }
 
