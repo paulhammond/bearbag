@@ -1,17 +1,16 @@
 # bearbag
 
-bearbag exports markdown files from [Bear](https://bear.app). I use it to copy
-my notes into a git repository, giving me backups and version history. Unlike
-other solutions listed below the sync is strictly one way; bearbag does not
-modify notes or write to the Bear database.
+bearbag was a markdown exporter for [Bear][]. I used it to copy my notes into a
+git repository, giving me backups and version history.
 
-## Installing
+**⚠️ bearbag is unmaintained.** [Bear 2.8][] now includes a built-in
+[bearcli][] tool, which provides all of the functionality needed to export notes
+and attachments, especially when wrapped in a small shell script. I recommend
+you use that instead.
 
-Using [Homebrew](http://brew.sh/):
-
-```
-brew install paulhammond/tap/bearbag
-```
+[Bear]: https://bear.app/
+[Bear 2.8]: https://blog.bear.app/2026/04/bear-2-8-bearcli-claude-connector-and-mcp-server/
+[bearcli]: https://bear.app/faq/command-line-interface/
 
 ## Using
 
